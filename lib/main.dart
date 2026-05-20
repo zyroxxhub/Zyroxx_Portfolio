@@ -1,21 +1,24 @@
 import 'package:flutter/material.dart';
 import 'dart:ui';
+import 'package:google_fonts/google_fonts.dart';
+import 'package:url_launcher/url_launcher.dart';
+import 'dart:math' as math;
 
 void main() {
   runApp(const SphereStudioApp());
 }
 
 class AppColors {
-  static const Color background = Color(0xFF020202);
-  static const Color surface = Color(0xFF0A0A0A);
-  static const Color cardBackground = Color(0xFF0D0D0D);
-  static const Color cardBorder = Color(0xFF1A1A1A);
-  static const Color primaryText = Color(0xFFFFFFFF);
+  static const Color background = Color(0xFF030712);
+  static const Color surface = Color(0xFF0B132B);
+  static const Color cardBackground = Color(0xFF0F172A);
+  static const Color cardBorder = Color(0xFF1E293B);
+  static const Color primaryText = Color(0xFFF8FAFC);
   static const Color secondaryText = Color(0xFF94A3B8);
-  static const Color accentGreen = Color(0xFF10B981);
-  static const Color accentGreenGlow = Color(0x3310B981);
-  static const Color accentGreenLight = Color(0xFF34D399);
-  static const Color surfaceElevated = Color(0xFF0F172A);
+  static const Color accentBlue = Color(0xFF00D2FF);
+  static const Color accentBlueGlow = Color(0x3300D2FF);
+  static const Color accentBlueLight = Color(0xFF38BDF8);
+  static const Color surfaceElevated = Color(0xFF1E293B);
 }
 
 class SphereStudioApp extends StatelessWidget {
@@ -23,40 +26,42 @@ class SphereStudioApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final baseTextTheme = ThemeData(brightness: Brightness.dark).textTheme;
+
     return MaterialApp(
-      title: 'Zyroxx.',
+      title: 'ZYROXX',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         brightness: Brightness.dark,
         scaffoldBackgroundColor: AppColors.background,
-        primaryColor: AppColors.accentGreen,
-        colorScheme: const ColorScheme.dark(
-          primary: AppColors.accentGreen,
-          secondary: AppColors.accentGreenLight,
-          surface: AppColors.cardBackground,
-          onSurface: AppColors.primaryText,
-        ),
-        textTheme: const TextTheme(
-          displayLarge: TextStyle(
+        primaryColor: AppColors.accentBlue,
+        textTheme: GoogleFonts.plusJakartaSansTextTheme(baseTextTheme).copyWith(
+          displayLarge: GoogleFonts.plusJakartaSans(
             color: AppColors.primaryText,
             fontWeight: FontWeight.w900,
             letterSpacing: -2,
           ),
-          displayMedium: TextStyle(
+          displayMedium: GoogleFonts.plusJakartaSans(
             color: AppColors.primaryText,
             fontWeight: FontWeight.w800,
             letterSpacing: -1.5,
           ),
-          bodyLarge: TextStyle(
+          bodyLarge: GoogleFonts.plusJakartaSans(
             color: AppColors.primaryText,
             height: 1.6,
             letterSpacing: 0.2,
           ),
-          bodyMedium: TextStyle(
+          bodyMedium: GoogleFonts.plusJakartaSans(
             color: AppColors.secondaryText,
             height: 1.6,
             letterSpacing: 0.2,
           ),
+        ),
+        colorScheme: const ColorScheme.dark(
+          primary: AppColors.accentBlue,
+          secondary: AppColors.accentBlueLight,
+          surface: AppColors.cardBackground,
+          onSurface: AppColors.primaryText,
         ),
       ),
       home: const PortfolioHomePage(),
@@ -76,7 +81,6 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
   final aboutKey = GlobalKey();
   final servicesKey = GlobalKey();
   final projectsKey = GlobalKey();
-  final teamKey = GlobalKey();
   final contactKey = GlobalKey();
 
   late final ScrollController _scrollController;
@@ -112,50 +116,50 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
     return Scaffold(
       extendBodyBehindAppBar: true,
       appBar: PreferredSize(
-        preferredSize: const Size.fromHeight(72),
+        preferredSize: const Size.fromHeight(80),
         child: Container(
-          margin: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          margin: const EdgeInsets.symmetric(horizontal: 24, vertical: 16),
           clipBehavior: Clip.antiAlias,
           decoration: BoxDecoration(
-            color: Colors.black.withAlpha(150),
-            borderRadius: BorderRadius.circular(40),
-            border: Border.all(
-              color: AppColors.accentGreen.withAlpha(40),
-              width: 0.5,
-            ),
+            color: const Color(0xFF0B132B).withAlpha(160),
+            borderRadius: BorderRadius.circular(50),
+            border: Border.all(color: Colors.white.withAlpha(25), width: 1),
             boxShadow: [
               BoxShadow(
-                color: Colors.black.withAlpha(180),
-                blurRadius: 30,
-                spreadRadius: -10,
+                color: AppColors.accentBlue.withAlpha(20),
+                blurRadius: 40,
+                offset: const Offset(0, 10),
               ),
             ],
           ),
           child: BackdropFilter(
-            filter: ColorFilter.mode(
-              Colors.black.withAlpha(20),
-              BlendMode.darken,
-            ),
+            filter: ImageFilter.blur(sigmaX: 20, sigmaY: 20),
             child: AppBar(
               backgroundColor: Colors.transparent,
               elevation: 0,
               title: Padding(
-                padding: const EdgeInsets.only(left: 12.0),
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text('🟩', style: TextStyle(fontSize: 18)),
-                    const SizedBox(width: 10),
-                    const Text(
-                      'Zyroxx.',
-                      style: TextStyle(
-                        color: AppColors.primaryText,
-                        fontWeight: FontWeight.w800,
-                        letterSpacing: 1.5,
-                        fontSize: 22,
-                      ),
+                padding: const EdgeInsets.only(left: 16.0),
+                child: MouseRegion(
+                  cursor: SystemMouseCursors.click,
+                  child: GestureDetector(
+                    onTap: () => _scrollToSection(heroKey),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Image.asset('assets/logo.png', height: 32),
+                        const SizedBox(width: 6),
+                        const Text(
+                          'ZYROXX',
+                          style: TextStyle(
+                            color: AppColors.primaryText,
+                            fontWeight: FontWeight.w800,
+                            letterSpacing: 3.0,
+                            fontSize: 16,
+                          ),
+                        ),
+                      ],
                     ),
-                  ],
+                  ),
                 ),
               ),
               actions: isDesktop
@@ -173,14 +177,10 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                         onTap: () => _scrollToSection(projectsKey),
                       ),
                       _NavBarItem(
-                        title: 'Team',
-                        onTap: () => _scrollToSection(teamKey),
-                      ),
-                      _NavBarItem(
                         title: 'Contact',
                         onTap: () => _scrollToSection(contactKey),
                       ),
-                      const SizedBox(width: 20),
+                      const SizedBox(width: 24),
                     ]
                   : [
                       Builder(
@@ -192,7 +192,7 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                           onPressed: () => Scaffold.of(context).openEndDrawer(),
                         ),
                       ),
-                      const SizedBox(width: 10),
+                      const SizedBox(width: 16),
                     ],
             ),
           ),
@@ -209,21 +209,29 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                     decoration: BoxDecoration(
                       gradient: LinearGradient(
                         colors: [
-                          AppColors.accentGreen.withAlpha(50),
-                          AppColors.accentGreen.withAlpha(10),
+                          AppColors.accentBlue.withAlpha(50),
+                          AppColors.accentBlue.withAlpha(10),
                         ],
                         begin: Alignment.topLeft,
                         end: Alignment.bottomRight,
                       ),
                     ),
-                    child: const Center(
-                      child: Text(
-                        'Zyroxx 🟩',
-                        style: TextStyle(
-                          color: AppColors.primaryText,
-                          fontWeight: FontWeight.w800,
-                          fontSize: 24,
-                        ),
+                    child: Center(
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Image.asset('assets/logo.png', height: 40),
+                          const SizedBox(height: 10),
+                          const Text(
+                            'ZYROXX',
+                            style: TextStyle(
+                              color: AppColors.primaryText,
+                              fontWeight: FontWeight.w800,
+                              letterSpacing: 3.0,
+                              fontSize: 22,
+                            ),
+                          ),
+                        ],
                       ),
                     ),
                   ),
@@ -249,13 +257,6 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                     },
                   ),
                   _DrawerItem(
-                    title: 'Team',
-                    onTap: () {
-                      Navigator.pop(context);
-                      _scrollToSection(teamKey);
-                    },
-                  ),
-                  _DrawerItem(
                     title: 'Contact',
                     onTap: () {
                       Navigator.pop(context);
@@ -276,7 +277,7 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
             child: Opacity(
               opacity: 0.03,
               child: GridPaper(
-                color: AppColors.accentGreen,
+                color: AppColors.accentBlue,
                 divisions: 1,
                 subdivisions: 1,
                 interval: 100,
@@ -304,10 +305,6 @@ class _PortfolioHomePageState extends State<PortfolioHomePage> {
                   scrollController: _scrollController,
                   child: ProjectsSection(key: projectsKey),
                 ),
-                // RevealOnScroll(
-                //   scrollController: _scrollController,
-                //   child: TeamSection(key: teamKey),
-                // ),
                 RevealOnScroll(
                   scrollController: _scrollController,
                   child: ContactSection(key: contactKey),
@@ -358,36 +355,80 @@ class SectionContainer extends StatelessWidget {
 
 class SectionTitle extends StatelessWidget {
   final String title;
+  final String subtitle;
   final String emoji;
-  const SectionTitle({super.key, required this.title, this.emoji = ''});
+  const SectionTitle({
+    super.key,
+    required this.title,
+    required this.subtitle,
+    this.emoji = '',
+  });
 
   @override
   Widget build(BuildContext context) {
     return Column(
       children: [
-        Text(
-          '$emoji $title',
-          style: const TextStyle(
-            color: AppColors.primaryText,
-            fontSize: 40,
-            fontWeight: FontWeight.w800,
-            letterSpacing: -1,
+        Container(
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+          decoration: BoxDecoration(
+            color: AppColors.accentBlue.withAlpha(20),
+            borderRadius: BorderRadius.circular(30),
+            border: Border.all(
+              color: AppColors.accentBlue.withAlpha(50),
+              width: 1,
+            ),
           ),
-          textAlign: TextAlign.center,
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Text(emoji, style: const TextStyle(fontSize: 16)),
+              const SizedBox(width: 8),
+              Text(
+                subtitle.toUpperCase(),
+                style: const TextStyle(
+                  color: AppColors.accentBlue,
+                  fontWeight: FontWeight.w800,
+                  letterSpacing: 2,
+                  fontSize: 12,
+                ),
+              ),
+            ],
+          ),
         ),
-        const SizedBox(height: 14),
-
+        const SizedBox(height: 16),
+        ShaderMask(
+          shaderCallback: (bounds) => const LinearGradient(
+            colors: [Colors.white, Color(0xFF94A3B8)],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ).createShader(bounds),
+          child: Text(
+            title,
+            style: const TextStyle(
+              color: Colors.white,
+              fontSize: 42,
+              fontWeight: FontWeight.w900,
+              letterSpacing: -1.5,
+            ),
+            textAlign: TextAlign.center,
+          ),
+        ),
+        const SizedBox(height: 16),
         Container(
           width: 60,
           height: 4,
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(2),
-            gradient: LinearGradient(
-              colors: [
-                AppColors.accentGreen,
-                AppColors.accentGreenLight.withAlpha(100),
-              ],
+            gradient: const LinearGradient(
+              colors: [AppColors.accentBlue, AppColors.accentBlueLight],
             ),
+            boxShadow: [
+              BoxShadow(
+                color: AppColors.accentBlue.withAlpha(80),
+                blurRadius: 10,
+                offset: const Offset(0, 2),
+              ),
+            ],
           ),
         ),
         const SizedBox(height: 60),
@@ -411,81 +452,17 @@ class HeroSection extends StatefulWidget {
 }
 
 class _HeroSectionState extends State<HeroSection> {
-  bool _isInitialized = false;
-
-  @override
-  void initState() {
-    super.initState();
-    // _controller =
-    //     VideoPlayerController.asset(
-    //         'assets/assets_video/create_a_video_with_this.mp4',
-    //       )
-    //       ..initialize()
-    //           .then((_) {
-    //             if (mounted) {
-    //               setState(() {
-    //                 _isInitialized = true;
-    //               });
-    //               _controller.setLooping(true);
-    //               _controller.setVolume(0);
-    //               _controller.play();
-    //             }
-    //           })
-    //           .catchError((error) {
-    //             debugPrint("Video initialization error: $error");
-    //           });
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     final size = MediaQuery.of(context).size;
     final isDesktop = size.width > 800;
 
     return Container(
-      height: size.height,
+      constraints: BoxConstraints(minHeight: size.height),
       width: double.infinity,
       decoration: const BoxDecoration(color: AppColors.background),
       child: Stack(
         children: [
-          // Video Background
-          // if (_isInitialized)
-          //   Positioned.fill(
-          //     child: Opacity(
-          //       opacity: 1.0, // Increased opacity for better visibility
-          //       child: FittedBox(
-          //         fit: BoxFit.cover,
-          //         child: SizedBox(
-          //           width: _controller.value.size.width,
-          //           height: _controller.value.size.height,
-          //           child: VideoPlayer(_controller),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
-
-          // // Refined Overlay (slightly less dark to let video show through)
-          // Positioned.fill(
-          //   child: Container(
-          //     decoration: BoxDecoration(
-          //       gradient: LinearGradient(
-          //         begin: Alignment.topCenter,
-          //         end: Alignment.bottomCenter,
-          //         colors: [
-          //           Colors.black.withAlpha(120),
-          //           Colors.black.withAlpha(60),
-          //           Colors.black.withAlpha(150),
-          //         ],
-          //       ),
-          //     ),
-          //   ),
-          // ),
-
-          // Background Glows (Optional, kept for texture)
           Positioned(
             top: -100,
             right: -100,
@@ -494,7 +471,7 @@ class _HeroSectionState extends State<HeroSection> {
               height: 400,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.accentGreen.withAlpha(20),
+                color: AppColors.accentBlue.withAlpha(20),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 100, sigmaY: 100),
@@ -510,7 +487,7 @@ class _HeroSectionState extends State<HeroSection> {
               height: 300,
               decoration: BoxDecoration(
                 shape: BoxShape.circle,
-                color: AppColors.accentGreenLight.withAlpha(15),
+                color: AppColors.accentBlueLight.withAlpha(15),
               ),
               child: BackdropFilter(
                 filter: ImageFilter.blur(sigmaX: 80, sigmaY: 80),
@@ -518,70 +495,80 @@ class _HeroSectionState extends State<HeroSection> {
               ),
             ),
           ),
+          const Positioned.fill(child: GlassBackgroundParticles()),
           Center(
             child: Padding(
-              padding: const EdgeInsets.symmetric(horizontal: 24),
+              padding: const EdgeInsets.symmetric(
+                horizontal: 24,
+                vertical: 120,
+              ),
               child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
-                  TweenAnimationBuilder<double>(
-                    tween: Tween(begin: 0.0, end: 1.0),
-                    duration: const Duration(seconds: 1),
-                    builder: (context, value, child) {
-                      return Opacity(
-                        opacity: value,
-                        child: Transform.translate(
-                          offset: Offset(0, 20 * (1 - value)),
-                          child: child,
-                        ),
-                      );
-                    },
-                    child: Text(
-                      'hey, we\'re',
-                      style: TextStyle(
-                        color: AppColors.secondaryText,
-                        fontSize: isDesktop ? 24 : 18,
-                        fontWeight: FontWeight.w500,
-                        letterSpacing: 2,
-                      ),
-                      textAlign: TextAlign.center,
-                    ),
-                  ),
-                  const SizedBox(height: 16),
                   TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0.0, end: 1.0),
                     duration: const Duration(milliseconds: 1200),
                     curve: Curves.easeOutCubic,
                     builder: (context, value, child) {
                       return Transform.scale(
-                        scale: 0.9 + (0.1 * value),
+                        scale: 0.8 + (0.2 * value),
                         child: Opacity(opacity: value, child: child),
+                      );
+                    },
+                    child: Container(
+                      padding: const EdgeInsets.only(
+                        top: 20,
+                        left: 20,
+                        right: 20,
+                        bottom: 0,
+                      ),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        boxShadow: [
+                          BoxShadow(
+                            color: AppColors.accentBlue.withAlpha(40),
+                            blurRadius: 100,
+                            spreadRadius: 20,
+                          ),
+                        ],
+                      ),
+                      child: AnimatedLogo(
+                        width: isDesktop ? 1200 : 600,
+                        fit: BoxFit.contain,
+                      ),
+                    ),
+                  ),
+                  TweenAnimationBuilder<double>(
+                    tween: Tween(begin: 0.0, end: 1.0),
+                    duration: const Duration(milliseconds: 1400),
+                    builder: (context, value, child) {
+                      return Opacity(
+                        opacity: value,
+                        child: Transform.translate(
+                          offset: Offset(0, 10 * (1 - value)),
+                          child: child,
+                        ),
                       );
                     },
                     child: ShaderMask(
                       shaderCallback: (bounds) => const LinearGradient(
-                        colors: [
-                          AppColors.accentGreen,
-                          AppColors.accentGreenLight,
-                          Colors.white,
-                        ],
-                        begin: Alignment.topLeft,
-                        end: Alignment.bottomRight,
+                        colors: [Colors.white, Color(0xFFCBD5E1)],
+                        begin: Alignment.topCenter,
+                        end: Alignment.bottomCenter,
                       ).createShader(bounds),
                       child: Text(
-                        'Zyroxx.',
+                        'ZYROXX',
                         style: TextStyle(
                           color: Colors.white,
-                          fontSize: isDesktop ? 120 : 80,
+                          fontSize: isDesktop ? 40 : 25,
                           fontWeight: FontWeight.w900,
-                          height: 0.9,
-                          letterSpacing: -4,
+                          letterSpacing: isDesktop ? 20.0 : 10.0,
                         ),
                         textAlign: TextAlign.center,
                       ),
                     ),
                   ),
-                  const SizedBox(height: 32),
+                  const SizedBox(height: 20),
                   TweenAnimationBuilder<double>(
                     tween: Tween(begin: 0.0, end: 1.0),
                     duration: const Duration(milliseconds: 1400),
@@ -589,11 +576,11 @@ class _HeroSectionState extends State<HeroSection> {
                       return Opacity(opacity: value, child: child);
                     },
                     child: Text(
-                      'we build cool websites & apps \u2728',
+                      'we build cool websites & apps',
                       style: TextStyle(
                         color: AppColors.secondaryText,
                         fontSize: isDesktop ? 26 : 20,
-                        fontWeight: FontWeight.w400,
+                        fontWeight: FontWeight.w500,
                         height: 1.6,
                         letterSpacing: 0.5,
                       ),
@@ -626,42 +613,86 @@ class _HeroSectionState extends State<HeroSection> {
   }
 }
 
-class _PrimaryButton extends StatelessWidget {
+class _PrimaryButton extends StatefulWidget {
   final String title;
   final VoidCallback onTap;
 
   const _PrimaryButton({required this.title, required this.onTap});
 
   @override
+  State<_PrimaryButton> createState() => _PrimaryButtonState();
+}
+
+class _PrimaryButtonState extends State<_PrimaryButton> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(50),
-        boxShadow: [
-          BoxShadow(
-            color: AppColors.accentGreen.withAlpha(60),
-            blurRadius: 20,
-            offset: const Offset(0, 8),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuint,
+        transform: Matrix4.identity()
+          ..translate(0.0, _isHovered ? -4.0 : 0.0)
+          ..scale(_isHovered ? 1.04 : 1.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+            color: _isHovered
+                ? AppColors.accentBlue.withAlpha(200)
+                : Colors.white.withAlpha(45),
+            width: 1.5,
           ),
-        ],
-      ),
-      child: ElevatedButton(
-        onPressed: onTap,
-        style: ElevatedButton.styleFrom(
-          backgroundColor: AppColors.accentGreen,
-          foregroundColor: Colors.black,
-          padding: const EdgeInsets.symmetric(horizontal: 40, vertical: 22),
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(50),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: _isHovered
+                ? [
+                    AppColors.accentBlue.withAlpha(50),
+                    AppColors.accentBlueLight.withAlpha(20),
+                  ]
+                : [Colors.white.withAlpha(15), Colors.white.withAlpha(5)],
           ),
-          elevation: 0,
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accentBlue.withAlpha(_isHovered ? 60 : 20),
+              blurRadius: _isHovered ? 25 : 15,
+              offset: Offset(0, _isHovered ? 10 : 6),
+            ),
+          ],
         ),
-        child: Text(
-          title,
-          style: const TextStyle(
-            fontWeight: FontWeight.w800,
-            fontSize: 16,
-            letterSpacing: 0.5,
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+            child: ElevatedButton(
+              onPressed: widget.onTap,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                foregroundColor: _isHovered
+                    ? AppColors.accentBlue
+                    : Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 22,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ),
           ),
         ),
       ),
@@ -669,25 +700,88 @@ class _PrimaryButton extends StatelessWidget {
   }
 }
 
-class _SecondaryButton extends StatelessWidget {
+class _SecondaryButton extends StatefulWidget {
   final String title;
   final VoidCallback onTap;
 
   const _SecondaryButton({required this.title, required this.onTap});
 
   @override
+  State<_SecondaryButton> createState() => _SecondaryButtonState();
+}
+
+class _SecondaryButtonState extends State<_SecondaryButton> {
+  bool _isHovered = false;
+
+  @override
   Widget build(BuildContext context) {
-    return OutlinedButton(
-      onPressed: onTap,
-      style: OutlinedButton.styleFrom(
-        foregroundColor: AppColors.accentGreen,
-        side: const BorderSide(color: AppColors.accentGreen, width: 2),
-        padding: const EdgeInsets.symmetric(horizontal: 36, vertical: 20),
-        shape: RoundedRectangleBorder(borderRadius: BorderRadius.circular(50)),
-      ),
-      child: Text(
-        title,
-        style: const TextStyle(fontWeight: FontWeight.w700, fontSize: 16),
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 300),
+        curve: Curves.easeOutQuint,
+        transform: Matrix4.identity()
+          ..translate(0.0, _isHovered ? -4.0 : 0.0)
+          ..scale(_isHovered ? 1.04 : 1.0),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(50),
+          border: Border.all(
+            color: _isHovered
+                ? AppColors.accentBlue.withAlpha(200)
+                : Colors.white.withAlpha(45),
+            width: 1.5,
+          ),
+          gradient: LinearGradient(
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+            colors: _isHovered
+                ? [
+                    AppColors.accentBlue.withAlpha(50),
+                    AppColors.accentBlueLight.withAlpha(20),
+                  ]
+                : [Colors.white.withAlpha(15), Colors.white.withAlpha(5)],
+          ),
+          boxShadow: [
+            BoxShadow(
+              color: AppColors.accentBlue.withAlpha(_isHovered ? 60 : 20),
+              blurRadius: _isHovered ? 25 : 15,
+              offset: Offset(0, _isHovered ? 10 : 6),
+            ),
+          ],
+        ),
+        child: ClipRRect(
+          borderRadius: BorderRadius.circular(50),
+          child: BackdropFilter(
+            filter: ImageFilter.blur(sigmaX: 12, sigmaY: 12),
+            child: ElevatedButton(
+              onPressed: widget.onTap,
+              style: ElevatedButton.styleFrom(
+                backgroundColor: Colors.transparent,
+                shadowColor: Colors.transparent,
+                foregroundColor: _isHovered
+                    ? AppColors.accentBlue
+                    : Colors.white,
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 40,
+                  vertical: 22,
+                ),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(50),
+                ),
+                elevation: 0,
+              ),
+              child: Text(
+                widget.title,
+                style: const TextStyle(
+                  fontWeight: FontWeight.w900,
+                  fontSize: 16,
+                  letterSpacing: 0.8,
+                ),
+              ),
+            ),
+          ),
+        ),
       ),
     );
   }
@@ -702,9 +796,13 @@ class AboutSection extends StatelessWidget {
       alternateBackground: true,
       child: Column(
         children: [
-          const SectionTitle(title: 'About Us', emoji: '\u{1F680}'),
+          const SectionTitle(
+            title: 'About Us',
+            subtitle: 'Our Story',
+            emoji: '\u{1F680}',
+          ),
           Text(
-            'We\'re Zyroxx — a small creative crew that loves building beautiful websites, slick mobile apps, and fun digital experiences. Whether it\'s for your business, your event, or your brand — we\'ve got you!',
+            'At Zyroxx, we build modern websites, smart mobile apps, and creative digital experiences that help businesses, brands, and events stand out with style and impact.',
             style: TextStyle(
               color: AppColors.primaryText,
               fontSize: MediaQuery.of(context).size.width > 800 ? 24 : 18,
@@ -728,75 +826,98 @@ class ServicesSection extends StatelessWidget {
       {
         'title': 'Business Websites',
         'icon': Icons.business_rounded,
-        'color': AppColors.accentGreen,
+        'color': AppColors.accentBlue,
       },
       {
         'title': 'Portfolio Websites',
         'icon': Icons.person_rounded,
-        'color': AppColors.accentGreenLight,
+        'color': AppColors.accentBlueLight,
       },
       {
         'title': 'Wedding Invites',
         'icon': Icons.favorite_rounded,
-        'color': AppColors.accentGreenLight,
+        'color': AppColors.accentBlueLight,
       },
       {
         'title': 'QR Menu Sites',
         'icon': Icons.restaurant_menu_rounded,
-        'color': AppColors.accentGreen,
+        'color': AppColors.accentBlue,
       },
       {
         'title': 'App UI Design',
         'icon': Icons.phone_android_rounded,
-        'color': AppColors.accentGreenLight,
+        'color': AppColors.accentBlueLight,
       },
     ];
 
     return SectionContainer(
       child: Column(
         children: [
-          const SectionTitle(title: 'What We Do', emoji: '\u2728'),
-          Wrap(
-            spacing: 24,
-            runSpacing: 24,
-            alignment: WrapAlignment.center,
-            children: services.map((s) {
-              final color = s['color'] as Color;
-              return HoverCard(
-                width: 260,
-                height: 200,
-                child: Padding(
-                  padding: const EdgeInsets.all(30.0),
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      Container(
-                        padding: const EdgeInsets.all(14),
-                        decoration: BoxDecoration(
-                          color: color.withAlpha(25),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                        child: Icon(
-                          s['icon'] as IconData,
-                          size: 32,
-                          color: color,
-                        ),
+          const SectionTitle(
+            title: 'What We Do',
+            subtitle: 'Services',
+            emoji: '\u2728',
+          ),
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 600;
+              final spacing = isMobile ? 12.0 : 24.0;
+              // Calculate width to perfectly fit 3 cards in a row
+              final cardWidth = (constraints.maxWidth - (spacing * 2.1)) / 3;
+              // Cap the maximum width so it doesn't get ridiculously large on ultra-wide screens
+              final widthToUse = cardWidth > 320.0 ? 320.0 : cardWidth;
+              final cardHeight = isMobile ? 150.0 : 220.0;
+              final iconSize = isMobile ? 24.0 : 36.0;
+              final fontSize = isMobile ? 11.0 : 17.0;
+
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                alignment: WrapAlignment.center,
+                children: services.map((s) {
+                  final color = s['color'] as Color;
+                  return HoverCard(
+                    width: widthToUse,
+                    height: cardHeight,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: isMobile ? 8.0 : 30.0,
+                        vertical: isMobile ? 16.0 : 30.0,
                       ),
-                      const SizedBox(height: 18),
-                      Text(
-                        s['title'] as String,
-                        style: const TextStyle(
-                          color: AppColors.primaryText,
-                          fontSize: 16,
-                          fontWeight: FontWeight.w600,
-                        ),
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Container(
+                            padding: EdgeInsets.all(isMobile ? 12 : 16),
+                            decoration: BoxDecoration(
+                              color: color.withAlpha(25),
+                              borderRadius: BorderRadius.circular(16),
+                            ),
+                            child: Icon(
+                              s['icon'] as IconData,
+                              size: iconSize,
+                              color: color,
+                            ),
+                          ),
+                          SizedBox(height: isMobile ? 14 : 20),
+                          Text(
+                            s['title'] as String,
+                            style: TextStyle(
+                              color: AppColors.primaryText,
+                              fontSize: fontSize,
+                              fontWeight: FontWeight.w600,
+                            ),
+                            textAlign: TextAlign.center,
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
-                    ],
-                  ),
-                ),
+                    ),
+                  );
+                }).toList(),
               );
-            }).toList(),
+            },
           ),
         ],
       ),
@@ -844,30 +965,43 @@ class _HoverCardState extends State<HoverCard> {
             ..translate(0.0, _isHovered ? -12.0 : 0.0)
             ..scale(_isHovered ? 1.02 : 1.0, _isHovered ? 1.02 : 1.0),
           decoration: BoxDecoration(
-            color: _isHovered
-                ? AppColors.surfaceElevated
-                : AppColors.cardBackground,
-            borderRadius: BorderRadius.circular(24),
+            gradient: LinearGradient(
+              begin: Alignment.topLeft,
+              end: Alignment.bottomRight,
+              colors: _isHovered
+                  ? [Colors.white.withAlpha(35), Colors.white.withAlpha(15)]
+                  : [Colors.white.withAlpha(20), Colors.white.withAlpha(5)],
+            ),
+            borderRadius: BorderRadius.circular(28),
             border: Border.all(
               color: _isHovered
-                  ? AppColors.accentGreen.withAlpha(120)
-                  : AppColors.cardBorder,
+                  ? AppColors.accentBlue.withAlpha(200)
+                  : Colors.white.withAlpha(35),
               width: _isHovered ? 2 : 1,
             ),
             boxShadow: [
-              BoxShadow(
-                color: _isHovered
-                    ? AppColors.accentGreen.withAlpha(30)
-                    : Colors.black.withAlpha(150),
-                blurRadius: _isHovered ? 40 : 20,
-                offset: Offset(0, _isHovered ? 20 : 10),
-                spreadRadius: _isHovered ? -5 : -10,
-              ),
+              if (_isHovered)
+                BoxShadow(
+                  color: AppColors.accentBlue.withAlpha(50),
+                  blurRadius: 40,
+                  offset: const Offset(0, 20),
+                  spreadRadius: -5,
+                )
+              else
+                BoxShadow(
+                  color: Colors.black.withAlpha(180),
+                  blurRadius: 30,
+                  offset: const Offset(0, 15),
+                  spreadRadius: -10,
+                ),
             ],
           ),
           child: ClipRRect(
-            borderRadius: BorderRadius.circular(24),
-            child: widget.child,
+            borderRadius: BorderRadius.circular(28),
+            child: BackdropFilter(
+              filter: ImageFilter.blur(sigmaX: 24, sigmaY: 24),
+              child: widget.child,
+            ),
           ),
         ),
       ),
@@ -882,16 +1016,25 @@ class ProjectsSection extends StatelessWidget {
   Widget build(BuildContext context) {
     final projects = [
       {
-        'title': 'Wedding Invite \u{1F492}',
+        'title': 'Funky Theme Websites',
+        'category': 'Brand Site',
+        'image': 'assets/clud.png',
+        'url': 'https://cludofficial.in/',
+      },
+      {
+        'title': 'Digital Wedding Websites',
+        'tagline': 'Digital Invitations with Elegance',
         'category': 'Web Design',
         'image':
             'https://images.unsplash.com/photo-1519741497674-611481863552?q=80&w=800&auto=format&fit=crop',
       },
       {
         'title': 'QR Menu \u{1F37D}',
+        'tagline': 'Menus Made Modern',
         'category': 'Web App',
         'image':
             'https://images.unsplash.com/photo-1517248135467-4c7edcad34c4?q=80&w=800&auto=format&fit=crop',
+        'url': 'https://al-sulthan.vercel.app/',
       },
       {
         'title': 'Dance App \u{1F57A}',
@@ -902,8 +1045,9 @@ class ProjectsSection extends StatelessWidget {
     ];
 
     final categoryColors = {
-      'Web Design': AppColors.accentGreen,
-      'Web App': AppColors.accentGreenLight,
+      'Brand Site': AppColors.accentBlue,
+      'Web Design': AppColors.accentBlueLight,
+      'Web App': AppColors.accentBlue,
       'Mobile UI': Colors.white,
     };
 
@@ -911,222 +1055,144 @@ class ProjectsSection extends StatelessWidget {
       alternateBackground: true,
       child: Column(
         children: [
-          const SectionTitle(title: 'Our Work', emoji: '\u{1F3A8}'),
-          Wrap(
-            spacing: 28,
-            runSpacing: 28,
-            alignment: WrapAlignment.center,
-            children: projects.map((p) {
-              final catColor =
-                  categoryColors[p['category']] ?? AppColors.accentGreen;
-              return HoverCard(
-                width: 340,
-                height: 420,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 220,
-                      width: double.infinity,
-                      child: Image.network(
-                        p['image']!,
-                        fit: BoxFit.cover,
-                        loadingBuilder: (context, child, loadingProgress) {
-                          if (loadingProgress == null) return child;
-                          return Center(
-                            child: CircularProgressIndicator(
-                              strokeWidth: 2,
-                              color: AppColors.accentGreen.withAlpha(80),
-                            ),
-                          );
-                        },
-                        errorBuilder: (context, error, stackTrace) => Center(
-                          child: Icon(
-                            Icons.image_rounded,
-                            size: 50,
-                            color: AppColors.secondaryText.withAlpha(60),
-                          ),
-                        ),
-                      ),
-                    ),
-                    Padding(
-                      padding: const EdgeInsets.all(24.0),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              horizontal: 12,
-                              vertical: 5,
-                            ),
-                            decoration: BoxDecoration(
-                              color: catColor.withAlpha(20),
-                              borderRadius: BorderRadius.circular(20),
-                            ),
-                            child: Text(
-                              p['category']!,
-                              style: TextStyle(
-                                color: catColor,
-                                fontSize: 12,
-                                fontWeight: FontWeight.w700,
-                              ),
-                            ),
-                          ),
-                          const SizedBox(height: 14),
-                          Text(
-                            p['title']!,
-                            style: const TextStyle(
-                              color: AppColors.primaryText,
-                              fontSize: 22,
-                              fontWeight: FontWeight.w700,
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            }).toList(),
+          const SectionTitle(
+            title: 'Our Work',
+            subtitle: 'Selected Projects',
+            emoji: '\u{1F3A8}',
           ),
-        ],
-      ),
-    );
-  }
-}
+          LayoutBuilder(
+            builder: (context, constraints) {
+              final isMobile = constraints.maxWidth < 700;
+              final spacing = isMobile ? 16.0 : 28.0;
+              final cardWidth = isMobile
+                  ? (constraints.maxWidth - spacing) / 2
+                  : 340.0;
+              final cardHeight = isMobile ? 240.0 : 420.0;
+              final imageHeight = isMobile ? 120.0 : 220.0;
 
-class TeamSection extends StatelessWidget {
-  const TeamSection({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    final team = [
-      {
-        'name': 'Aazim',
-        'role': 'Web / Support',
-        'image': 'assets/images/aazim.jpg',
-        'color': AppColors.accentGreen,
-      },
-      {
-        'name': 'Sneha',
-        'role': 'App UI',
-        'image': 'assets/images/sneha.jpg',
-        'color': AppColors.accentGreenLight,
-      },
-      {
-        'name': 'Jereena',
-        'role': 'Design',
-        'image': 'assets/images/jereena.jpg',
-        'color': AppColors.accentGreen,
-      },
-      {
-        'name': 'Grace',
-        'role': 'Content',
-        'image': 'assets/images/grace.jpg',
-        'color': AppColors.accentGreenLight,
-      },
-      {
-        'name': 'Vishnu',
-        'role': 'Backend/Support',
-        'image': 'assets/images/vishnu.jpeg',
-        'color': AppColors.accentGreen,
-      },
-    ];
-
-    return SectionContainer(
-      child: Column(
-        children: [
-          const SectionTitle(title: 'The Crew', emoji: '\u{1F91D}'),
-          Wrap(
-            spacing: 40,
-            runSpacing: 40,
-            alignment: WrapAlignment.center,
-            children: team.map((t) {
-              final color = t['color'] as Color;
-              return HoverCard(
-                width: 240,
-                height: 320,
-                child: Padding(
-                  padding: const EdgeInsets.symmetric(vertical: 40),
-                  child: Column(
-                    children: [
-                      Container(
-                        width: 130,
-                        height: 130,
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          border: Border.all(
-                            color: color.withAlpha(50),
-                            width: 1,
-                          ),
-                          boxShadow: [
-                            BoxShadow(
-                              color: color.withAlpha(30),
-                              blurRadius: 20,
-                              spreadRadius: -10,
-                            ),
-                          ],
+              return Wrap(
+                spacing: spacing,
+                runSpacing: spacing,
+                alignment: WrapAlignment.center,
+                children: projects.map((p) {
+                  final catColor =
+                      categoryColors[p['category']] ?? AppColors.accentBlue;
+                  return HoverCard(
+                    width: cardWidth,
+                    height: cardHeight,
+                    onTap: p['url'] != null
+                        ? () => launchUrl(Uri.parse(p['url']!))
+                        : null,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: imageHeight,
+                          width: double.infinity,
+                          child: p['image']!.startsWith('assets/')
+                              ? Image.asset(
+                                  p['image']!,
+                                  fit: BoxFit.cover,
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Center(
+                                        child: Padding(
+                                          padding: const EdgeInsets.all(16.0),
+                                          child: Text(
+                                            error.toString(),
+                                            style: const TextStyle(
+                                              color: Colors.redAccent,
+                                              fontSize: 10,
+                                            ),
+                                            textAlign: TextAlign.center,
+                                          ),
+                                        ),
+                                      ),
+                                )
+                              : Image.network(
+                                  p['image']!,
+                                  fit: BoxFit.cover,
+                                  loadingBuilder:
+                                      (context, child, loadingProgress) {
+                                        if (loadingProgress == null)
+                                          return child;
+                                        return Center(
+                                          child: CircularProgressIndicator(
+                                            strokeWidth: 2,
+                                            color: AppColors.accentBlue
+                                                .withAlpha(80),
+                                          ),
+                                        );
+                                      },
+                                  errorBuilder: (context, error, stackTrace) =>
+                                      Center(
+                                        child: Icon(
+                                          Icons.image_rounded,
+                                          size: 50,
+                                          color: AppColors.secondaryText
+                                              .withAlpha(60),
+                                        ),
+                                      ),
+                                ),
                         ),
-                        padding: const EdgeInsets.all(6),
-                        child: Container(
-                          decoration: const BoxDecoration(
-                            shape: BoxShape.circle,
-                            color: AppColors.cardBackground,
-                          ),
-                          clipBehavior: Clip.antiAlias,
-                          child: Image.asset(
-                            t['image'] as String,
-                            fit: BoxFit.cover,
-                            errorBuilder: (context, error, stackTrace) =>
-                                Center(
-                                  child: Icon(
-                                    Icons.person_rounded,
-                                    size: 60,
-                                    color: color.withAlpha(150),
+                        Padding(
+                          padding: EdgeInsets.all(isMobile ? 12.0 : 24.0),
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: isMobile ? 8 : 12,
+                                  vertical: isMobile ? 4 : 5,
+                                ),
+                                decoration: BoxDecoration(
+                                  color: catColor.withAlpha(20),
+                                  borderRadius: BorderRadius.circular(20),
+                                ),
+                                child: Text(
+                                  p['category']!,
+                                  style: TextStyle(
+                                    color: catColor,
+                                    fontSize: isMobile ? 10 : 12,
+                                    fontWeight: FontWeight.w700,
                                   ),
                                 ),
+                              ),
+                              SizedBox(height: isMobile ? 8 : 14),
+                              Text(
+                                p['title']!,
+                                style: TextStyle(
+                                  color: AppColors.primaryText,
+                                  fontSize: isMobile ? 14 : 22,
+                                  fontWeight: FontWeight.w700,
+                                ),
+                                maxLines: 1,
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (p['tagline'] != null)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    top: isMobile ? 4.0 : 8.0,
+                                  ),
+                                  child: Text(
+                                    p['tagline']!,
+                                    style: TextStyle(
+                                      color: AppColors.secondaryText,
+                                      fontSize: isMobile ? 10 : 14,
+                                      fontWeight: FontWeight.w500,
+                                    ),
+                                    maxLines: 2,
+                                    overflow: TextOverflow.ellipsis,
+                                  ),
+                                ),
+                            ],
                           ),
                         ),
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        t['name'] as String,
-                        style: const TextStyle(
-                          color: AppColors.primaryText,
-                          fontSize: 22,
-                          fontWeight: FontWeight.w800,
-                          letterSpacing: -0.5,
-                        ),
-                      ),
-                      const SizedBox(height: 12),
-                      Container(
-                        padding: const EdgeInsets.symmetric(
-                          horizontal: 16,
-                          vertical: 6,
-                        ),
-                        decoration: BoxDecoration(
-                          color: color.withAlpha(25),
-                          borderRadius: BorderRadius.circular(30),
-                          border: Border.all(
-                            color: color.withAlpha(40),
-                            width: 0.5,
-                          ),
-                        ),
-                        child: Text(
-                          t['role'] as String,
-                          style: TextStyle(
-                            color: color,
-                            fontSize: 12,
-                            fontWeight: FontWeight.w600,
-                            letterSpacing: 0.5,
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
+                      ],
+                    ),
+                  );
+                }).toList(),
               );
-            }).toList(),
+            },
           ),
         ],
       ),
@@ -1134,8 +1200,50 @@ class TeamSection extends StatelessWidget {
   }
 }
 
-class ContactSection extends StatelessWidget {
+class ContactSection extends StatefulWidget {
   const ContactSection({super.key});
+
+  @override
+  State<ContactSection> createState() => _ContactSectionState();
+}
+
+class _ContactSectionState extends State<ContactSection> {
+  final _nameController = TextEditingController();
+  final _emailController = TextEditingController();
+  final _messageController = TextEditingController();
+
+  @override
+  void dispose() {
+    _nameController.dispose();
+    _emailController.dispose();
+    _messageController.dispose();
+    super.dispose();
+  }
+
+  void _sendMessage() {
+    final String name = _nameController.text;
+    final String email = _emailController.text;
+    final String message = _messageController.text;
+
+    final Uri emailLaunchUri = Uri(
+      scheme: 'mailto',
+      path: 'zyroxxconnect@gmail.com',
+      query: _encodeQueryParameters(<String, String>{
+        'subject': 'Project Inquiry from $name',
+        'body': 'Name: $name\nEmail: $email\n\nMessage:\n$message',
+      }),
+    );
+    launchUrl(emailLaunchUri);
+  }
+
+  String? _encodeQueryParameters(Map<String, String> params) {
+    return params.entries
+        .map(
+          (MapEntry<String, String> e) =>
+              '${Uri.encodeComponent(e.key)}=${Uri.encodeComponent(e.value)}',
+        )
+        .join('&');
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -1145,7 +1253,11 @@ class ContactSection extends StatelessWidget {
       alternateBackground: true,
       child: Column(
         children: [
-          const SectionTitle(title: 'Say Hello', emoji: '\u{1F44B}'),
+          const SectionTitle(
+            title: 'Say Hello',
+            subtitle: 'Get In Touch',
+            emoji: '\u{1F44B}',
+          ),
           Flex(
             direction: isDesktop ? Axis.horizontal : Axis.vertical,
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -1165,22 +1277,28 @@ class ContactSection extends StatelessWidget {
                       ),
                     ),
                     const SizedBox(height: 50),
-                    const _ContactLink(
+                    _ContactLink(
                       icon: Icons.chat_bubble_rounded,
                       text: 'WhatsApp',
-                      color: AppColors.accentGreen,
+                      color: AppColors.accentBlue,
+                      onTap: () => launchUrl(Uri.parse('https://wa.me/')),
                     ),
                     const SizedBox(height: 20),
-                    const _ContactLink(
+                    _ContactLink(
                       icon: Icons.camera_alt_rounded,
                       text: 'Instagram',
-                      color: AppColors.accentGreenLight,
+                      color: AppColors.accentBlueLight,
+                      onTap: () =>
+                          launchUrl(Uri.parse('https://instagram.com/')),
                     ),
                     const SizedBox(height: 20),
-                    const _ContactLink(
+                    _ContactLink(
                       icon: Icons.email_rounded,
-                      text: 'Email',
-                      color: AppColors.accentGreen,
+                      text: 'zyroxxconnect@gmail.com',
+                      color: AppColors.accentBlue,
+                      onTap: () => launchUrl(
+                        Uri.parse('mailto:zyroxxconnect@gmail.com'),
+                      ),
                     ),
                     if (!isDesktop) const SizedBox(height: 50),
                   ],
@@ -1192,54 +1310,96 @@ class ContactSection extends StatelessWidget {
                 child: Container(
                   padding: const EdgeInsets.all(36),
                   decoration: BoxDecoration(
-                    color: AppColors.cardBackground.withAlpha(180),
                     borderRadius: BorderRadius.circular(32),
+                    gradient: const LinearGradient(
+                      begin: Alignment.topLeft,
+                      end: Alignment.bottomRight,
+                      colors: [
+                        Color(0x28FFFFFF), // ~15% white
+                        Color(0x0AFFFFFF), // ~4% white
+                      ],
+                    ),
                     border: Border.all(
-                      color: AppColors.accentGreen.withAlpha(30),
-                      width: 0.5,
+                      color: Colors.white.withAlpha(40),
+                      width: 1,
                     ),
                     boxShadow: [
                       BoxShadow(
-                        color: AppColors.accentGreen.withAlpha(5),
-                        blurRadius: 60,
+                        color: AppColors.accentBlue.withAlpha(20),
+                        blurRadius: 80,
                         offset: const Offset(0, 30),
+                        spreadRadius: -10,
                       ),
                     ],
                   ),
-                  child: Column(
-                    children: [
-                      const _ContactInput(hint: 'Your name'),
-                      const SizedBox(height: 20),
-                      const _ContactInput(hint: 'Your email'),
-                      const SizedBox(height: 20),
-                      const _ContactInput(
-                        hint: 'Tell us about your project...',
-                        maxLines: 4,
-                      ),
-                      const SizedBox(height: 30),
-                      SizedBox(
-                        width: double.infinity,
-                        child: ElevatedButton(
-                          onPressed: () {},
-                          style: ElevatedButton.styleFrom(
-                            backgroundColor: AppColors.accentGreen,
-                            foregroundColor: Colors.black,
-                            padding: const EdgeInsets.symmetric(vertical: 20),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(16),
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(32),
+                    child: BackdropFilter(
+                      filter: ImageFilter.blur(sigmaX: 16, sigmaY: 16),
+                      child: Column(
+                        children: [
+                          _ContactInput(
+                            hint: 'Your name',
+                            controller: _nameController,
+                          ),
+                          const SizedBox(height: 20),
+                          _ContactInput(
+                            hint: 'Your email',
+                            controller: _emailController,
+                          ),
+                          const SizedBox(height: 20),
+                          _ContactInput(
+                            hint: 'Tell us about your project...',
+                            maxLines: 4,
+                            controller: _messageController,
+                          ),
+                          const SizedBox(height: 30),
+                          SizedBox(
+                            width: double.infinity,
+                            child: Container(
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(16),
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    AppColors.accentBlue,
+                                    AppColors.accentBlueLight,
+                                  ],
+                                ),
+                                boxShadow: [
+                                  BoxShadow(
+                                    color: AppColors.accentBlue.withAlpha(60),
+                                    blurRadius: 20,
+                                    offset: const Offset(0, 5),
+                                  ),
+                                ],
+                              ),
+                              child: ElevatedButton(
+                                onPressed: _sendMessage,
+                                style: ElevatedButton.styleFrom(
+                                  backgroundColor: Colors.transparent,
+                                  shadowColor: Colors.transparent,
+                                  foregroundColor: Colors.black,
+                                  padding: const EdgeInsets.symmetric(
+                                    vertical: 20,
+                                  ),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(16),
+                                  ),
+                                ),
+                                child: const Text(
+                                  'Send message',
+                                  style: TextStyle(
+                                    fontWeight: FontWeight.w800,
+                                    fontSize: 16,
+                                    letterSpacing: 0.5,
+                                  ),
+                                ),
+                              ),
                             ),
                           ),
-                          child: const Text(
-                            'Send message',
-                            style: TextStyle(
-                              fontWeight: FontWeight.w800,
-                              fontSize: 16,
-                              letterSpacing: 0.5,
-                            ),
-                          ),
-                        ),
+                        ],
                       ),
-                    ],
+                    ),
                   ),
                 ),
               ),
@@ -1255,11 +1415,13 @@ class _ContactLink extends StatefulWidget {
   final IconData icon;
   final String text;
   final Color color;
+  final VoidCallback? onTap;
 
   const _ContactLink({
     required this.icon,
     required this.text,
-    this.color = AppColors.accentGreen,
+    this.color = AppColors.accentBlue,
+    this.onTap,
   });
 
   @override
@@ -1274,75 +1436,148 @@ class _ContactLinkState extends State<_ContactLink> {
     return MouseRegion(
       onEnter: (_) => setState(() => _isHovered = true),
       onExit: (_) => setState(() => _isHovered = false),
-      cursor: SystemMouseCursors.click,
-      child: AnimatedContainer(
-        duration: const Duration(milliseconds: 200),
-        padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
-        decoration: BoxDecoration(
-          color: _isHovered ? widget.color.withAlpha(15) : Colors.transparent,
-          borderRadius: BorderRadius.circular(12),
-        ),
-        child: Row(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              padding: const EdgeInsets.all(8),
-              decoration: BoxDecoration(
-                color: widget.color.withAlpha(25),
-                borderRadius: BorderRadius.circular(10),
+      cursor: widget.onTap != null
+          ? SystemMouseCursors.click
+          : SystemMouseCursors.basic,
+      child: GestureDetector(
+        onTap: widget.onTap,
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 200),
+          padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 10),
+          decoration: BoxDecoration(
+            color: _isHovered ? widget.color.withAlpha(15) : Colors.transparent,
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Row(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Container(
+                padding: const EdgeInsets.all(8),
+                decoration: BoxDecoration(
+                  color: widget.color.withAlpha(25),
+                  borderRadius: BorderRadius.circular(10),
+                ),
+                child: Icon(widget.icon, color: widget.color, size: 22),
               ),
-              child: Icon(widget.icon, color: widget.color, size: 22),
-            ),
-            const SizedBox(width: 16),
-            Text(
-              widget.text,
-              style: TextStyle(
-                color: _isHovered ? widget.color : AppColors.primaryText,
-                fontSize: 18,
-                fontWeight: FontWeight.w600,
+              const SizedBox(width: 16),
+              Text(
+                widget.text,
+                style: TextStyle(
+                  color: _isHovered ? widget.color : AppColors.primaryText,
+                  fontSize: 18,
+                  fontWeight: FontWeight.w600,
+                ),
               ),
-            ),
-          ],
+            ],
+          ),
         ),
       ),
     );
   }
 }
 
-class _ContactInput extends StatelessWidget {
+class _ContactInput extends StatefulWidget {
   final String hint;
   final int maxLines;
+  final TextEditingController? controller;
 
-  const _ContactInput({required this.hint, this.maxLines = 1});
+  const _ContactInput({required this.hint, this.maxLines = 1, this.controller});
+
+  @override
+  State<_ContactInput> createState() => _ContactInputState();
+}
+
+class _ContactInputState extends State<_ContactInput> {
+  final FocusNode _focusNode = FocusNode();
+  bool _isHovered = false;
+  bool _isFocused = false;
+
+  @override
+  void initState() {
+    super.initState();
+    _focusNode.addListener(() {
+      setState(() {
+        _isFocused = _focusNode.hasFocus;
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _focusNode.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
-    return TextField(
-      maxLines: maxLines,
-      style: const TextStyle(color: AppColors.primaryText),
-      decoration: InputDecoration(
-        hintText: hint,
-        hintStyle: TextStyle(color: AppColors.secondaryText.withAlpha(120)),
-        filled: true,
-        fillColor: AppColors.surfaceElevated,
-        border: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide.none,
-        ),
-        enabledBorder: OutlineInputBorder(
-          borderRadius: BorderRadius.circular(14),
-          borderSide: BorderSide.none,
-        ),
-        focusedBorder: OutlineInputBorder(
+    return MouseRegion(
+      onEnter: (_) => setState(() => _isHovered = true),
+      onExit: (_) => setState(() => _isHovered = false),
+      child: AnimatedContainer(
+        duration: const Duration(milliseconds: 250),
+        decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(16),
-          borderSide: const BorderSide(
-            color: AppColors.accentGreen,
-            width: 1.5,
-          ),
+          boxShadow: [
+            if (_isFocused)
+              BoxShadow(
+                color: AppColors.accentBlue.withAlpha(20),
+                blurRadius: 15,
+                spreadRadius: 2,
+              )
+            else if (_isHovered)
+              BoxShadow(
+                color: Colors.white.withAlpha(5),
+                blurRadius: 10,
+                spreadRadius: 1,
+              ),
+          ],
         ),
-        contentPadding: const EdgeInsets.symmetric(
-          horizontal: 24,
-          vertical: 20,
+        child: TextField(
+          controller: widget.controller,
+          focusNode: _focusNode,
+          maxLines: widget.maxLines,
+          style: const TextStyle(color: AppColors.primaryText),
+          decoration: InputDecoration(
+            hintText: widget.hint,
+            hintStyle: TextStyle(color: AppColors.secondaryText.withAlpha(120)),
+            filled: true,
+            fillColor: _isFocused
+                ? AppColors.surface.withAlpha(200)
+                : _isHovered
+                ? Colors.white.withAlpha(25)
+                : Colors.white.withAlpha(15),
+            border: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: _isFocused
+                    ? AppColors.accentBlue
+                    : _isHovered
+                    ? Colors.white.withAlpha(60)
+                    : Colors.white.withAlpha(30),
+                width: 1,
+              ),
+            ),
+            enabledBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: BorderSide(
+                color: _isHovered
+                    ? Colors.white.withAlpha(60)
+                    : Colors.white.withAlpha(30),
+                width: 1,
+              ),
+            ),
+            focusedBorder: OutlineInputBorder(
+              borderRadius: BorderRadius.circular(16),
+              borderSide: const BorderSide(
+                color: AppColors.accentBlue,
+                width: 1.5,
+              ),
+            ),
+            contentPadding: const EdgeInsets.symmetric(
+              horizontal: 24,
+              vertical: 20,
+            ),
+          ),
         ),
       ),
     );
@@ -1359,19 +1594,26 @@ class FooterSection extends StatelessWidget {
       padding: const EdgeInsets.symmetric(vertical: 60),
       child: Column(
         children: [
-          ShaderMask(
-            shaderCallback: (bounds) => const LinearGradient(
-              colors: [AppColors.accentGreen, AppColors.accentGreenLight],
-            ).createShader(bounds),
-            child: const Text(
-              'Zyroxx.',
-              style: TextStyle(
-                color: Colors.white,
-                fontSize: 28,
-                fontWeight: FontWeight.w900,
-                letterSpacing: -1,
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Image.asset('assets/logo.png', height: 32),
+              const SizedBox(width: 12),
+              ShaderMask(
+                shaderCallback: (bounds) => const LinearGradient(
+                  colors: [AppColors.accentBlue, AppColors.accentBlueLight],
+                ).createShader(bounds),
+                child: const Text(
+                  'ZYROXX',
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 28,
+                    fontWeight: FontWeight.w900,
+                    letterSpacing: 2.0,
+                  ),
+                ),
               ),
-            ),
+            ],
           ),
           const SizedBox(height: 16),
           Text(
@@ -1415,14 +1657,14 @@ class _NavBarItemState extends State<_NavBarItem> {
           padding: const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
           decoration: BoxDecoration(
             color: _isHovered
-                ? AppColors.accentGreen.withAlpha(15)
+                ? AppColors.accentBlue.withAlpha(15)
                 : Colors.transparent,
             borderRadius: BorderRadius.circular(20),
           ),
           child: Text(
             widget.title,
             style: TextStyle(
-              color: _isHovered ? AppColors.accentGreen : AppColors.primaryText,
+              color: _isHovered ? AppColors.accentBlue : AppColors.primaryText,
               fontWeight: FontWeight.w600,
               fontSize: 15,
             ),
@@ -1591,7 +1833,7 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
             Positioned(
               top: -100 - (scrollOffset * 0.15) + (animValue * 150),
               left: -150 + (animValue * 80),
-              child: _buildBlob(AppColors.accentGreen, 500),
+              child: _buildBlob(AppColors.accentBlue, 500),
             ),
             // Middle Right Blob
             Positioned(
@@ -1615,7 +1857,7 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
             Positioned(
               top: 2800 - (scrollOffset * 0.25) + (animValue * 100),
               left: 100 + (animValue * 120),
-              child: _buildBlob(AppColors.accentGreenLight, 500),
+              child: _buildBlob(AppColors.accentBlueLight, 500),
             ),
           ],
         );
@@ -1636,4 +1878,173 @@ class _AnimatedBackgroundState extends State<AnimatedBackground>
       ),
     );
   }
+}
+
+class AnimatedLogo extends StatefulWidget {
+  final double? width;
+  final double? height;
+  final BoxFit fit;
+
+  const AnimatedLogo({
+    super.key,
+    this.width,
+    this.height,
+    this.fit = BoxFit.contain,
+  });
+
+  @override
+  State<AnimatedLogo> createState() => _AnimatedLogoState();
+}
+
+class _AnimatedLogoState extends State<AnimatedLogo>
+    with SingleTickerProviderStateMixin {
+  late final AnimationController _controller;
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 12),
+    )..repeat();
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        return Transform(
+          transform: Matrix4.rotationY(_controller.value * 2 * math.pi),
+          alignment: Alignment.center,
+          child: child,
+        );
+      },
+      child: Image.asset(
+        'assets/logo.png',
+        width: widget.width,
+        height: widget.height,
+        fit: widget.fit,
+      ),
+    );
+  }
+}
+
+class GlassBackgroundParticles extends StatefulWidget {
+  const GlassBackgroundParticles({super.key});
+
+  @override
+  State<GlassBackgroundParticles> createState() =>
+      _GlassBackgroundParticlesState();
+}
+
+class _GlassBackgroundParticlesState extends State<GlassBackgroundParticles>
+    with SingleTickerProviderStateMixin {
+  late AnimationController _controller;
+  final List<Particle> _particles = [];
+  final math.Random _random = math.Random();
+
+  @override
+  void initState() {
+    super.initState();
+    _controller = AnimationController(
+      vsync: this,
+      duration: const Duration(seconds: 10),
+    )..repeat();
+
+    // Create 15 particles
+    for (int i = 0; i < 15; i++) {
+      _particles.add(
+        Particle(
+          x: _random.nextDouble(),
+          y: _random.nextDouble(),
+          radius: _random.nextDouble() * 20 + 10,
+          speedX: (_random.nextDouble() - 0.5) * 0.003,
+          speedY: (_random.nextDouble() - 0.5) * 0.003,
+          color: i % 3 == 0
+              ? AppColors.accentBlue.withAlpha(50)
+              : i % 3 == 1
+              ? AppColors.accentBlueLight.withAlpha(40)
+              : Colors.purpleAccent.withAlpha(30),
+        ),
+      );
+    }
+  }
+
+  @override
+  void dispose() {
+    _controller.dispose();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _controller,
+      builder: (context, child) {
+        // Update particles positions on each frame
+        for (var p in _particles) {
+          p.x += p.speedX;
+          p.y += p.speedY;
+
+          // Bounce off borders
+          if (p.x < 0 || p.x > 1) p.speedX *= -1;
+          if (p.y < 0 || p.y > 1) p.speedY *= -1;
+        }
+
+        return CustomPaint(
+          painter: ParticlePainter(particles: _particles),
+          child: Container(),
+        );
+      },
+    );
+  }
+}
+
+class Particle {
+  double x; // normalized 0.0 to 1.0
+  double y; // normalized 0.0 to 1.0
+  double radius;
+  double speedX;
+  double speedY;
+  Color color;
+
+  Particle({
+    required this.x,
+    required this.y,
+    required this.radius,
+    required this.speedX,
+    required this.speedY,
+    required this.color,
+  });
+}
+
+class ParticlePainter extends CustomPainter {
+  final List<Particle> particles;
+
+  ParticlePainter({required this.particles});
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    for (var p in particles) {
+      final paint = Paint()
+        ..color = p.color
+        ..maskFilter = const MaskFilter.blur(
+          BlurStyle.normal,
+          20,
+        ); // Makes them soft glowing orbs
+
+      final position = Offset(p.x * size.width, p.y * size.height);
+      canvas.drawCircle(position, p.radius, paint);
+    }
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) => true;
 }
